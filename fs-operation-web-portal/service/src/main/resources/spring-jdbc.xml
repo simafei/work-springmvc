@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	   xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	   xmlns:cache="http://www.springframework.org/schema/cache"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+			http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+			http://www.springframework.org/schema/context
+			http://www.springframework.org/schema/context/spring-context-3.0.xsd
+			http://www.springframework.org/schema/aop
+			http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+			http://www.springframework.org/schema/tx
+			http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+			http://www.springframework.org/schema/mvc
+			http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+			http://www.springframework.org/schema/contextY
+			http://www.springframework.org/schema/context/spring-context-3.0.xsd
+			http://www.springframework.org/schema/cache
+			http://www.springframework.org/schema/cache/spring-cache.xsd">
+
+	<bean id="dataSourceAbstract" abstract="true"
+		  class="com.alibaba.druid.pool.DruidDataSource" init-method="init"
+		  destroy-method="close">
+		<property name="driverClassName" value="${fs.operation.mysql.driverClass}" />
+		<property name="maxActive" value="${fs.operation.mysql.maxActive}" />
+		<property name="initialSize" value="${fs.operation.mysql.minIdle}" />
+		<property name="minIdle" value="${fs.operation.mysql.minIdle}" />
+
+		<property name="filters" value="stat,log4j" />
+		<property name="maxWait" value="60000" />
+		<property name="timeBetweenEvictionRunsMillis" value="60000" />
+		<property name="minEvictableIdleTimeMillis" value="300000" />
+
+		<property name="validationQuery" value="SELECT 1" />
+		<property name="testWhileIdle" value="true" />
+		<property name="testOnBorrow" value="false" />
+		<property name="testOnReturn" value="false" />
+		<property name="poolPreparedStatements" value="true" />
+		<property name="maxPoolPreparedStatementPerConnectionSize"
+				  value="50" />
+	</bean>
+	<!-- 数据源 -->
+	<bean id="dataSourceMain" class="com.alibaba.druid.pool.DruidDataSource"
+		  parent="dataSourceAbstract">
+		<property name="url" value="${fs.operation.mysql.jdbcUrl}" />
+		<property name="username" value="${fs.operation.mysql.user}" />
+		<property name="password" ref="passwordProviderMain" />
+	</bean>
+	<!-- 密码管理 -->
+	<bean name="passwordProviderMain"
+		  class="com.facishare.open.common.password.DbPasswordFactoryBean">
+		<property name="cryptWord" value="${fs.operation.mysql.password}" />
+	</bean>
+
+	<!-- 事务管理器 -->
+	<bean id="transactionManager"
+		  class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSourceMain" />
+	</bean>
+
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSourceMain" />
+	</bean>
+
+	<tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true" />
+</beans>

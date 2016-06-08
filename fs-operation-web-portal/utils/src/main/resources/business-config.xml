@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<business>
+    <configs>
+        <config name="session_service">
+            <dataPointKeys>
+                stat_date,n_active_defined_service,n_active_defined_service_ea_member,n_sent_message_down,n_sent_message_down_ea_member,n_sent_message_down_receiver,n_enter_session_service,n_enter_session_service_member,n_enter_session_service_ea_member,n_menu_click,n_menu_click_member,n_menu_click_ea_member,n_sent_message_up,n_sent_message_up_member,n_sent_message_up_ea_member,n_message_click,n_message_click_member,n_message_click_ea_member,n_active_client_member,n_active_client_ea_member,n_active_ea_member
+            </dataPointKeys>
+            <totalDataPointKeys>
+                n_active_defined_service_total,n_active_defined_service_ea_member_total,n_sent_message_down_total,n_sent_message_down_ea_member_total,n_sent_message_down_receiver_total,n_enter_session_service_total,n_enter_session_service_member_total,n_enter_session_service_ea_member_total,n_menu_click_total,n_menu_click_member_total,n_menu_click_ea_member_total,n_sent_message_up_total,n_sent_message_up_member_total,n_sent_message_up_ea_member_total,n_message_click_total,n_message_click_member_total,n_message_click_ea_member_total,n_active_client_member_total,n_active_client_ea_member_total,n_active_ea_member_total
+            </totalDataPointKeys>
+            <detailKeys>
+                n_sent_message_down,n_sent_message_down_ea_member,n_sent_message_down_receiver,n_sent_message_up,n_message_click,n_menu_click
+            </detailKeys>
+        </config>
+    </configs>
+</business>
+

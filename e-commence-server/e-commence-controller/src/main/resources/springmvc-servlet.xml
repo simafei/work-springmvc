@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:beans="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.1.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+    <!-- scan the package and the sub package -->
+    <context:component-scan base-package="com.commence.controller"/>
+
+    <!-- don't handle the static resource -->
+    <mvc:default-servlet-handler />
+    <!-- if you use annotation you must configure following setting -->
+
+    <mvc:annotation-driven>
+        <mvc:message-converters register-defaults="true">
+            <!-- @ResponseBody乱码问题，将StringHttpMessageConverter的默认编码设为UTF-8 -->
+            <beans:bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <beans:constructor-arg value="UTF-8"/>
+            </beans:bean>
+            <!-- 配置Fastjson支持 -->
+            <beans:bean class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
+                <beans:property name="charset" value="UTF-8"/>
+                <beans:property name="supportedMediaTypes">
+                    <beans:list>
+                        <beans:value>application/json</beans:value>
+                        <beans:value>text/html;charset=UTF-8</beans:value>
+                    </beans:list>
+                </beans:property>
+                <beans:property name="features">
+                    <beans:list>
+                        <beans:value>WriteMapNullValue</beans:value>
+                        <beans:value>QuoteFieldNames</beans:value>
+                        <beans:value>WriteDateUseDateFormat</beans:value>
+                        <beans:value>WriteEnumUsingToString</beans:value>
+                    </beans:list>
+                </beans:property>
+            </beans:bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+    <bean id="viewResolver"
+          class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.freemarker.FreeMarkerView" />
+        <property name="cache" value="true" />
+        <!--<property name="prefix" value="/WEB-INF/views/" />-->
+        <property name="suffix" value=".ftl" />
+        <property name="contentType" value="text/html;charset=UTF-8"></property>
+        <property name="requestContextAttribute" value="request" />
+        <property name="exposeSpringMacroHelpers" value="true" />
+        <property name="exposeRequestAttributes" value="true" />
+        <property name="exposeSessionAttributes" value="true" />
+    </bean>
+
+    <bean id="freemarkerConfig"
+          class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+        <property name="templateLoaderPath" value="/WEB-INF/views/" />
+        <property name="freemarkerSettings">
+            <props>
+                <prop key="template_update_delay">0</prop>
+                <prop key="default_encoding">UTF-8</prop>
+                <prop key="number_format">0.##</prop>
+                <prop key="datetime_format">yyyy-MM-dd HH:mm:ss</prop>
+                <prop key="classic_compatible">true</prop>
+                <prop key="template_exception_handler">ignore</prop>
+            </props>
+        </property>
+    </bean>
+
+    <import resource="classpath:applicationContext.xml"/>
+</beans>
